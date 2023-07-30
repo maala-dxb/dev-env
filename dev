@@ -26,11 +26,18 @@ pod_exec(){
 
 sub_poetry(){
  POD=$(get_pod_name)
- echo "${yel} Running poetry into ${POD} ${yel}"
+ echo "${yel} Running poetry into ${POD} ${yel}..."
  pod_exec $POD poetry $@
- echo "${yel} Copying pyproject and poetry files from the container to your local ${yel}"
+ echo "${yel} Copying pyproject and poetry files from the container to your local ...${yel}${end}"
  kubectl cp default/${POD}:pyproject.toml pyproject.toml
  kubectl cp default/${POD}:poetry.lock poetry.lock
+}
+
+
+sub_t(){
+  POD=$(get_pod_name)
+  echo "${yel} Running pytest into ${POD} ..${yel}${end}"
+  pod_exec $POD pytest $@
 }
 
 
