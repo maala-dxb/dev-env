@@ -1,0 +1,57 @@
+#!/bin/bash
+
+sub_up(){
+    echo -e "${yel}Building and Deploying app through Skaffold in background ...${end}"
+    skaffold dev $@
+}
+
+
+get_app_name(){
+  echo $(yq '.build.artifacts[0].image' skaffold.yaml) | tr -d '"'
+}
+
+
+get_pod_name(){
+  app=$(get_app_name)
+  pod=$(kubectl get pods -l app=${app} -o=yaml | yq '.items[0].metadata.name')
+  echo $pod | tr -d '"'
+}
+
+pod_exec(){
+  POD=$1
+  shift; # remove the first argument e.g: the pod name
+  kubectl exec ${POD} -it -- $@
+}
+
+
+sub_poetry(){
+ POD=$(get_pod_name)
+ echo "${yel} Running poetry into ${POD} ${yel}"
+ pod_exec $POD poetry $@
+ echo "${yel} Copying pyproject and poetry files from the container to your local ${yel}"
+ kubectl cp default/${POD}:pyproject.toml pyproject.toml
+ kubectl cp default/${POD}:poetry.lock poetry.lock
+}
+
+
+red=$'\e[1;31m'
+yel=$'\e[1;33m'
+end=$'\e[0m'
+subcommand=$1
+case $subcommand in
+    "" | "-h" | "--help")
+        sub_help
+        ;;
+    *)
+        shift
+        arr=($(declare -F | grep sub | awk '{print $3}' | cut -c 5-))
+	if [[ ! " ${arr[@]} " =~ " ${subcommand} " ]]; then
+            echo "${red}Error: ${subcommand} is not a known subcommand.${end}"
+            echo "       ${yel}Run '$ProgName --help' for a list of known subcommands.${yel}"
+            exit 1
+        fi
+        sub_${subcommand} $@
+        ;;
+esac
+
+

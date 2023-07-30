@@ -6,6 +6,11 @@ set -e
 platform=`uname`
 linux_pro=`uname -m`
 
+sudo apt install yq
+
+sudo cp dev /usr/local/bin/dev
+
+
 if [[ $platform != "Linux" ]]; then
 	echo "unsupported platform, only Linux is supported for now because Maala has only Linux machine :)"
 
