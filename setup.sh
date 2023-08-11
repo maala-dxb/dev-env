@@ -6,9 +6,32 @@ set -e
 platform=`uname`
 linux_pro=`uname -m`
 
-sudo apt install yq
 
-sudo cp dev /usr/local/bin/dev
+while getopts ":f:" opt; do
+  case $opt in
+    f) command_from="$OPTARG"
+    ;;
+    \?) echo "Invalid option -$OPTARG" >&2
+    exit 1
+    ;;
+  esac
+
+  case $OPTARG in
+    -*) echo "Option $opt needs a valid argument"
+    exit 1
+    ;;
+  esac
+done
+
+echo "command from $command_from"
+
+# skip those steps if the script is used within docker file
+if [[ "$command_from" == "dockerfile" ]]; then
+  echo "skipping dev install for dockerfile.."
+else
+  sudo apt install yq
+  sudo cp dev /usr/local/bin/dev
+fi
 
 
 if [[ $platform != "Linux" ]]; then
