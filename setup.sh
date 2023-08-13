@@ -20,9 +20,18 @@ if [[ "$linux_pro" == "x86_64" ]]; then # amd machine
 	curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && \
         sudo install skaffold /usr/local/bin/
 
+  curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && \
+        sudo install minikube-linux-amd64 /usr/local/bin/minikube
+
+
+
 elif [[ "$linux_pro" == "arm" ]]; then # arm machine
 	curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-arm64 && \
         sudo install skaffold /usr/local/bin/
+
+  curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-arm64 && \
+        sudo install minikube-linux-arm64 /usr/local/bin/minikube
+
 
 else
 	echo "Oops unknown processor $linux_pro, only linux is supported for now!"
