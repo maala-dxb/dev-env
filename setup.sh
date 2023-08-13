@@ -27,10 +27,10 @@ echo "${yel}Installing minikube..${yel}${end}"
 #curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-"$arch" && \
 #        sudo install minikube-linux-arm64 /usr/local/bin/minikube
 
-echo "${yel} Setting up docker on the machine..${yel}${end}"
-# clean up old config and setup docker
-sudo apt remove docker-desktop
-rm -r $HOME/.docker/desktop
-sudo rm /usr/local/bin/com.docker.cli
-sudo apt purge docker-desktop
-sudo apt-get install ./docker-desktop-24.0.5-"$arch".deb
+#echo "${yel} Setting up docker on the machine..${yel}${end}"
+## clean up old config and setup docker
+#sudo apt remove docker-desktop
+#rm -r $HOME/.docker/desktop
+#sudo rm /usr/local/bin/com.docker.cli
+#sudo apt purge docker-desktop
+#sudo apt-get install ./docker-desktop-24.0.5-"$arch".deb
