@@ -25,7 +25,7 @@ curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffo
 
 echo "${yel}Installing minikube..${yel}${end}"
 curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-"$arch" && \
-        sudo install minikube-linux-arm64 /usr/local/bin/minikube
+        sudo install minikube-linux-"$arch" /usr/local/bin/minikube
 
 #echo "${yel} Setting up docker on the machine..${yel}${end}"
 ## clean up old config and setup docker
