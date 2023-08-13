@@ -18,11 +18,11 @@ fi
 
 if [[ "$linux_pro" == "x86_64" ]]; then # amd machine
 	curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && \
-        sudo install -y skaffold /usr/local/bin/
+        sudo install skaffold /usr/local/bin/
 
 elif [[ "$linux_pro" == "arm" ]]; then # arm machine
 	curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-arm64 && \
-        sudo install -y skaffold /usr/local/bin/
+        sudo install skaffold /usr/local/bin/
 
 else
 	echo "Oops unknown processor $linux_pro, only linux is supported for now!"
