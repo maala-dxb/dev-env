@@ -3,37 +3,34 @@
 # exit immediately when any command fails 
 set -e
 
-platform=`uname`
-linux_pro=`uname -m`
+red=$'\e[1;31m'
+yel=$'\e[1;33m'
+end=$'\e[0m'
 
+platform=`uname`
+arch=`dpkg --print-architecture`
 sudo apt install -y yq
 sudo cp dev /usr/local/bin/dev
-
+# not sure if I should have this here, but it's not executable
+# by default within docker container
+sudo chmod +x /usr/local/bin/dev
 
 if [[ $platform != "Linux" ]]; then
-	echo "unsupported platform, only Linux is supported for now because Maala has only Linux machine :)"
-
+	echo "${red} unsupported platform, only Linux is supported for now :)${red}"
 fi
 
-
-if [[ "$linux_pro" == "x86_64" ]]; then # amd machine
-	curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-amd64 && \
+echo "${yel}Installing skaffold..${yel}${end}"
+curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-"$arch" && \
         sudo install skaffold /usr/local/bin/
 
-  curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64 && \
-        sudo install minikube-linux-amd64 /usr/local/bin/minikube
+echo "${yel}Installing minikube..${yel}${end}"
+#curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-"$arch" && \
+#        sudo install minikube-linux-arm64 /usr/local/bin/minikube
 
-
-
-elif [[ "$linux_pro" == "arm" ]]; then # arm machine
-	curl -Lo skaffold https://storage.googleapis.com/skaffold/releases/latest/skaffold-linux-arm64 && \
-        sudo install skaffold /usr/local/bin/
-
-  curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-arm64 && \
-        sudo install minikube-linux-arm64 /usr/local/bin/minikube
-
-
-else
-	echo "Oops unknown processor $linux_pro, only linux is supported for now!"
-	exit 1
-fi
+echo "${yel} Setting up docker on the machine..${yel}${end}"
+# clean up old config and setup docker
+sudo apt remove docker-desktop
+rm -r $HOME/.docker/desktop
+sudo rm /usr/local/bin/com.docker.cli
+sudo apt purge docker-desktop
+sudo apt-get install ./docker-desktop-24.0.5-"$arch".deb
